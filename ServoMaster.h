@@ -18,6 +18,13 @@
 
 typedef void(*maneuverCallback)(void);
 
+typedef struct maneuverStruct {
+	unsigned long durationMs;
+	unsigned long startMs;
+	maneuverCallback callback;
+	bool running;
+} maneuver;
+
 #include <Servo.h>
 
 class ServoMaster {
@@ -42,9 +49,7 @@ public:
 private:
 	unsigned short _leftPin, _rightPin;
 	signed short _currentSpeedPercent; // positive = forward, negative = backward
-	bool _isManeuvering; // used for timed maneuvers
-	unsigned long _maneuverStartMs, _maneuverDurationMs;
-	maneuverCallback _maneuverCallback;
+	maneuver _maneuver;
 
 	Servo _left;
 	Servo _right;
@@ -53,6 +58,7 @@ private:
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
 	void startManeuverTimer(unsigned int durationMs, maneuverCallback callback);
+	void stopManeuverTimer();
 };
 
 #endif /* ServoMaster_H */
