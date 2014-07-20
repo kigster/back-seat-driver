@@ -16,21 +16,43 @@
 #include <Arduino.h>
 #endif
 
+typedef void(*maneuverCallback)(void);
+
 #include <Servo.h>
 
 class ServoMaster {
 public:
-	ServoMaster(uint8_t leftPin, uint8_t rightPin);
-	void begin();
-	void forward(uint8_t speed, int duration);
-	void back(uint8_t speed, int duration);
-	void turn(int angle);
+	ServoMaster(unsigned short leftPin, unsigned short rightPin);
+
+	void attach();
+	void detach();
+ 	void goForward(unsigned short speedPercent);
+ 	void goForward(unsigned short speedPercent,
+ 			unsigned int durationMs,
+ 			maneuverCallback callback);
+	void goBackward(unsigned short speedPercent);
+	void goBackward(unsigned short speedPercent,
+			unsigned int durationMs,
+			maneuverCallback callback);
+	void turn(int angle,
+			maneuverCallback callback);
 	void stop();
+	bool isMoving();
+	bool isManeuvering();
 private:
-	uint8_t _leftPin, _rightPin;
+	unsigned short _leftPin, _rightPin;
+	signed short _currentSpeedPercent; // positive = forward, negative = backward
+	bool _isManeuvering; // used for timed maneuvers
+	unsigned long _maneuverStartMs, _maneuverDurationMs;
+	maneuverCallback _maneuverCallback;
+
 	Servo _left;
 	Servo _right;
+
 	int speedToMicroseconds(int speedPercent);
+	void moveAtCurrentSpeed();
+	void checkManeuveringState();
+	void startManeuverTimer(unsigned int durationMs, maneuverCallback callback);
 };
 
 #endif /* ServoMaster_H */

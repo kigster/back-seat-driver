@@ -10,9 +10,9 @@
 
 #include <NewPing.h>
 
-#define TRIGGER_PIN  5   // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define ECHO_PIN     6   // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 100 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define TRIGGER_PIN  3   // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     2   // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
@@ -20,9 +20,18 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 #include <ServoMaster.h>
 
 Util utility;
-ServoMaster controller = ServoMaster(13, 12);
+ServoMaster bot = ServoMaster(10, 11);
 
+const short int leftWhiskerPin = 9, rightWhiskerPin = 6;
+const short int maxSpeed = 100;
+short int speed = maxSpeed;
 static unsigned int spaceAhead = 0, spaceAfterTurn;
+static bool leftWhisk, rightWhisk = false;
+
+static const unsigned int sonarCheckPeriodMs = 50; // don't check more often than that
+static unsigned int lastSonarAtMs = 0;
+
+//===============================================================
 
 unsigned int spaceInFront() {
 	unsigned int value = sonar.ping() / US_ROUNDTRIP_CM;
@@ -30,37 +39,83 @@ unsigned int spaceInFront() {
 }
 
 void adjustDirection() {
-	Serial.print("adjusting direction! distance is ");
-	Serial.println(spaceAhead);
-	controller.stop();
-	controller.turn(45);
+	turnLeft();
+}
 
-	spaceAfterTurn = spaceInFront();
-	if (spaceAfterTurn > spaceAhead)
-		return;
+void turnLeft() {
+	Serial.println("turn -45");
+	bot.turn(-45, &checkLeft);
+}
 
-	controller.turn(-90);
+void checkLeft() {
+	Serial.println("check left");
 	spaceAfterTurn = spaceInFront();
-	if (spaceAfterTurn > spaceAhead) {
-		return;
+	detectWhiskers(&leftWhisk, &rightWhisk);
+	if (leftWhisk || spaceAfterTurn < spaceAhead)
+		bot.turn(90, &checkRight);
+}
+
+void checkRight() {
+	Serial.println("check right");
+	spaceAfterTurn = spaceInFront();
+	detectWhiskers(&leftWhisk, &rightWhisk);
+	if (rightWhisk || spaceAfterTurn < spaceAhead)
+		bot.turn(135, NULL);
+}
+
+void detectWhiskers(bool *left, bool *right) {
+	*left = (digitalRead(leftWhiskerPin) == LOW);
+	*right = (digitalRead(rightWhiskerPin) == LOW);
+}
+
+void hardRight() {
+	Serial.println("turn 90");
+	bot.turn(90, NULL);
+}
+
+void hardLeft() {
+	Serial.println("turn -90");
+	bot.turn(-90, NULL);
+}
+
+bool navigateWithWhiskers() {
+	detectWhiskers(&leftWhisk, &rightWhisk);
+
+	if (leftWhisk || rightWhisk) {
+		bot.stop();
+		bot.goBackward(speed,
+				500,
+				leftWhisk ? &hardRight : &hardLeft);
+		return true;
 	}
-
-	controller.turn(-120);
+	return false;
 }
 
 void setup() {
 	Serial.begin(9600);
 	utility.playResetSound(4);
-	controller.begin();
+
+	bot.attach();
+
 	srand(millis());
+
+	pinMode(leftWhiskerPin, INPUT);
+	pinMode(rightWhiskerPin, INPUT);
 }
 
 void loop() {
-	controller.forward(100, 100);
-	spaceAhead = spaceInFront();
-	if (spaceAhead > 0 && spaceAhead < 50) {
-		adjustDirection();
-	}
 
+	if (!bot.isManeuvering()) {
+		bot.goForward(speed);
+		if (millis() > sonarCheckPeriodMs + lastSonarAtMs) {
+			spaceAhead = spaceInFront();
+			lastSonarAtMs = millis();
+			if (spaceAhead < 50) {
+				adjustDirection();
+			}
+		} else {
+			navigateWithWhiskers();
+		}
+	}
 }
 
