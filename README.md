@@ -11,7 +11,7 @@ autonomous vehicle. Current implementation is aimed at a 2-wheeled robot, with t
 * Un-timed moves, such as "go backward" indefinitely
 * Turn by angle, computed based on the the wheel ratio coefficient that can be adjusted for
   each size of tire
-* Much more linear speed curve, when mapping from speed in % from 0 to 100, to Servo microseconds.  Using ```arctan()``` function allows to flatten out uneven Servo speed response curve (see graph in the PDF for Parallax Arduino Robot Shield Kit).
+* Much more linear speed curve, when mapping from speed in % from 0 to 100, to Servo microseconds.  Using ```tan()``` function allows to flatten out uneven Servo speed response curve (see graph in the PDF for Parallax Arduino Robot Shield Kit).
 
 ## Design Boundary
 
@@ -84,7 +84,7 @@ or
 
 Speed is always passed in a positive integer, from 0 to 100 (expressed in %).
 
-Internal helper converts that to Servo's microseconds PWM timing. In addition we apply ```arctan()```
+Internal helper converts that to Servo's microseconds PWM timing. In addition we apply ```tan()```
 function to transform speed and provide more linear response between speed and RPMs, compared to
 when specifying microseconds directly.
 
