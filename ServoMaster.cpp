@@ -26,9 +26,10 @@ void ServoMaster::detach() {
 	_right.detach();
 }
 
+
 void ServoMaster::moveAtCurrentSpeed() {
-	_left.writeMicroseconds(speedToMicroseconds(_currentSpeedPercent));
-	_right.writeMicroseconds(speedToMicroseconds(-_currentSpeedPercent));
+	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(_currentSpeedPercent));
+	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(-_currentSpeedPercent));
 }
 
 void ServoMaster::goForward(unsigned short speedPercent) {
@@ -60,15 +61,9 @@ void ServoMaster::goBackward(unsigned short speedPercent,
 void ServoMaster::turn(int angle, maneuverCallback callback) {
 	stop();
 	signed short speed = 100 * (angle == 0 ? 1 : abs(angle) / angle);
-	_left.writeMicroseconds(speedToMicroseconds(speed));
-	_right.writeMicroseconds(speedToMicroseconds(speed));
+	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(speed));
+	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(speed));
 	startManeuverTimer(abs(angle) * 8, callback);
-}
-
-void ServoMaster::stopManeuverTimer() {
-	_maneuver.running = false;
-	_maneuver.durationMs = 0;
-	_maneuver.startMs = 0;
 }
 
 void ServoMaster::stop() {
@@ -81,6 +76,22 @@ bool ServoMaster::isMoving() {
 	return (_currentSpeedPercent != 0);
 }
 
+
+bool ServoMaster::isManeuvering() {
+	checkManeuveringState();
+	return _maneuver.running;
+}
+
+//________________________________________________________________________________________
+//
+// Private
+
+void ServoMaster::stopManeuverTimer() {
+	_maneuver.running = false;
+	_maneuver.durationMs = 0;
+	_maneuver.startMs = 0;
+}
+
 void ServoMaster::checkManeuveringState() {
 	if (_maneuver.running && millis() - _maneuver.startMs > _maneuver.durationMs) {
 		stop();
@@ -88,16 +99,11 @@ void ServoMaster::checkManeuveringState() {
 		maneuverCallback oldCallback = _maneuver.callback;
 		_maneuver.callback = NULL;
 
-		// this "trick" allows us to call the callback which might
+		// call the callback (if defined) using previously saved poiner
 		// start another maneuver, and yet reset _maneuverCallback
 		// if no new maneuver was started.
 		if (oldCallback != NULL) oldCallback();
 	}
-}
-
-bool ServoMaster::isManeuvering() {
-	checkManeuveringState();
-	return _maneuver.running;
 }
 
 void ServoMaster::startManeuverTimer(unsigned int durationMs,
@@ -108,16 +114,14 @@ void ServoMaster::startManeuverTimer(unsigned int durationMs,
 	_maneuver.running = true;
 }
 
-
-
 // speed can be between -100 and +100
-int ServoMaster::speedToMicroseconds(int speedPercent) {
-	int value = (int) (1500 + // that's the middle
-			200.0 * // plus/minus 200
-					atan((double) (1.55 * speedPercent / 100.0))); // this makes curve more linear
-//	Serial.print("Converted Speed ");
-//	Serial.print(speedPercent);
-//	Serial.print(" to Microseconds ");
-//	Serial.println(value);
+int ServoMaster::convertSpeedPercentToMicroseconds(int speedPercent) {
+	int value = (int) (
+			// 1500 +
+			(SERVO_MIN_MS + SERVO_HALF_RANGE_MS) +
+			// +/- 200
+			SERVO_HALF_RANGE_MS *
+			// this ranges -1..1 for speedPercent between 0 and 100
+			atan((double) (1.55 * speedPercent / 100.0)));
 	return value;
 }
