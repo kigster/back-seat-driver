@@ -16,6 +16,10 @@
 	#include <WProgram.h>
 #endif
 
+#define SERVO_VELOCITY_TRIG
+#define SERVO_LOG_BUFFER_LEN 50
+#define SERVO_MIN_DEBUG_LOG_FREQ 50
+
 typedef void(*maneuverCallback)(void);
 
 typedef struct maneuverStruct {
@@ -63,9 +67,11 @@ public:
 	void debug(bool debugEnabled);
 private:
 	uint8_t _leftPin, _rightPin;
-	signed short _currentSpeedPercent; // positive = forward, negative = backward
+	signed short _currentSpeedPercent;
+	// positive = forward, negative = backward
 	maneuver _maneuver;
-	char logBuffer[50];
+	char _logBuffer[SERVO_LOG_BUFFER_LEN];
+	unsigned long _initMs, _lastDebugMs;
 
 	Servo _left;
 	Servo _right;

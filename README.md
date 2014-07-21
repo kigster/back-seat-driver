@@ -106,6 +106,27 @@ prohibit from effectively integrating other similar libraries.  In the world whe
 should be moving at once, nothing in the code path seems worthy of a dead pause of the ```delay```,
 although for simple tasks it sure makes coding easy.
 
+#### Debugging
+
+Calling this function:
+
+```c++
+   robot.debug(true);
+```
+
+will instantly enable debug mode, which sends information about robot comamnds back to the 
+Serial port. Here is an example below (first column is milliseconds since program start).
+
+```
+     13395	goForward(100), currentSpeed =  95
+     16358	goForward( 71), currentSpeed = 100
+     16411	goForward( 73), currentSpeed =  71
+     16462	goForward( 72), currentSpeed =  73
+     16577	goForward(100), currentSpeed =  72
+     16690	turn(-45, callback=yes)
+     17052	stop()
+```     
+
 ### Example
 
 In this example the client uses Sonar sensor to detect objects ahead. If an object is found,

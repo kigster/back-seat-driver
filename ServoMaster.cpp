@@ -9,12 +9,13 @@
 
 #include "ServoMaster.h"
 #include <math.h>
-#define SERVO_VELOCITY_TRIG
 
 ServoMaster::ServoMaster(uint8_t leftPin, uint8_t rightPin) {
 	_leftPin = leftPin;
 	_rightPin = rightPin;
 	_debug = false;
+	_initMs = millis();
+	_lastDebugMs = 0;
 	stop();
 }
 
@@ -34,18 +35,18 @@ void ServoMaster::moveAtCurrentSpeed() {
 }
 
 void ServoMaster::goForward(uint8_t speedPercent) {
-	if (_currentSpeedPercent == (signed short) speedPercent) return;
+	if (_currentSpeedPercent == ((signed short) speedPercent)) return;
 	if (_debug) {
-		sprintf(logBuffer, "goForward(%d)", speedPercent); log();
+		sprintf(_logBuffer, "goForward(%3d), currentSpeed = %3d", speedPercent, _currentSpeedPercent); log();
 	}
 	_currentSpeedPercent = (signed short) speedPercent;
 	moveAtCurrentSpeed();
 }
 
 void ServoMaster::goBackward(uint8_t speedPercent) {
-	if (_currentSpeedPercent == -((signed short) speedPercent)) return;
+	if (_currentSpeedPercent == ((signed short) speedPercent)) return;
 	if (_debug) {
-		sprintf(logBuffer, "goBackward(%d)", speedPercent); log();
+		sprintf(_logBuffer, "goBackward(%d)", speedPercent); log();
 	}
 
 	_currentSpeedPercent = -((signed short) speedPercent);
@@ -57,7 +58,7 @@ void ServoMaster::goForward(uint8_t speedPercent,
 		maneuverCallback callback) {
 
 	if (_debug) {
-		sprintf(logBuffer, "goForward(%d, %d, callback=%s)",
+		sprintf(_logBuffer, "goForward(%d, %d, callback=%s)",
 				speedPercent,
 				durationMs,
 				(callback == NULL ? "no" : "yes"));
@@ -73,7 +74,7 @@ void ServoMaster::goBackward(uint8_t speedPercent,
 		maneuverCallback callback) {
 
 	if (_debug) {
-		sprintf(logBuffer, "goForward(%d, %d, callback=%s)",
+		sprintf(_logBuffer, "goForward(%d, %d, callback=%s)",
 				speedPercent,
 				durationMs,
 				(callback == NULL ? "no" : "yes"));
@@ -85,7 +86,7 @@ void ServoMaster::goBackward(uint8_t speedPercent,
 
 void ServoMaster::turn(int angle, maneuverCallback callback) {
 	if (_debug) {
-		sprintf(logBuffer, "turn(%d, callback=%s)",
+		sprintf(_logBuffer, "turn(%d, callback=%s)",
 				angle,
 				(callback == NULL ? "no" : "yes"));
 		log();
@@ -100,7 +101,7 @@ void ServoMaster::turn(int angle, maneuverCallback callback) {
 
 void ServoMaster::stop() {
 	if (_debug) {
-		sprintf(logBuffer, "stop()");
+		sprintf(_logBuffer, "stop()");
 		log();
 	}
 	_currentSpeedPercent = 0;
@@ -143,7 +144,7 @@ void ServoMaster::checkManeuveringState() {
 		// start another maneuver, and yet reset _maneuverCallback
 		// if no new maneuver was started.
 		if (oldCallback != NULL) {
-			if (_debug) { sprintf(logBuffer, "executing callback"); log(); }
+			if (_debug) { sprintf(_logBuffer, "executing callback"); log(); }
 			oldCallback();
 		}
 	}
@@ -174,7 +175,7 @@ int ServoMaster::convertSpeedPercentToMicroseconds(signed short speedPercentWith
 
 #ifdef DEBUG_VELOCITY
 	if (_debug) {
-		sprintf(logBuffer, "speed value is %d for %d %%, range is %d", value, speedPercentWithSign,
+		sprintf(_logBuffer, "speed value is %d for %d %%, range is %d", value, speedPercentWithSign,
 				SERVO_HALF_RANGE_MS); log();
 	}
 #endif
@@ -182,5 +183,13 @@ int ServoMaster::convertSpeedPercentToMicroseconds(signed short speedPercentWith
 }
 
 void ServoMaster::log() {
-	Serial.println(logBuffer);
+	char millisSince[15];
+	unsigned long ms = millis();
+	if (ms - _lastDebugMs > SERVO_MIN_DEBUG_LOG_FREQ) {
+		_lastDebugMs = ms;
+
+		sprintf(millisSince, "%10d\t", (long)(_lastDebugMs - _initMs) );
+		Serial.print(millisSince);
+		Serial.println(_logBuffer);
+	}
 }
