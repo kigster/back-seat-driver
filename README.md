@@ -195,7 +195,7 @@ void checkRight() {
 I assembled this model in several hours, but added the Ultrasound distance sensor.  The sensor seems 
 to be very narrow path focused. 
 
-![Parallax Arduino Robot](examples/obstacle_avoidance_bot.jpg)
+![Parallax Arduino Robot](bot.jpg)
 
 ## Contributing
 

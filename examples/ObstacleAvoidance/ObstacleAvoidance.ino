@@ -1,7 +1,7 @@
 /*
  * This example uses HC-SR04 distance sensor to detect obstacles and change course.
 
- * Dependencies: Wire, ICP, NewPing, Servo
+ * Dependencies: NewPing, Servo
  *
  * Created on: Jul 16, 2014
  * Author: Konstantin Gredeskoul
@@ -25,10 +25,8 @@
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 #include <ServoMaster.h>
-#include <ServoArm.h>
 
 static ServoMaster bot = ServoMaster(10, 11);
-static ServoArm arm = ServoArm(13, 12, -7);
 
 static const uint8_t leftWhiskerPin = 9, rightWhiskerPin = 6;
 static const uint8_t maxSpeed = 100;
