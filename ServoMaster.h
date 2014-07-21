@@ -35,7 +35,7 @@ typedef struct maneuverStruct {
 
 // this would be 200 for the above values.
 #ifndef SERVO_HALF_RANGE_MS
-#define SERVO_HALF_RANGE_MS (SERVO_MAX_MS - SERVO_MIN_MS / 2)
+#define SERVO_HALF_RANGE_MS (SERVO_MAX_MS - SERVO_MIN_MS) / 2
 #endif
 
 
@@ -43,16 +43,16 @@ typedef struct maneuverStruct {
 
 class ServoMaster {
 public:
-	ServoMaster(unsigned short leftPin, unsigned short rightPin);
+	ServoMaster(uint8_t leftPin, uint8_t rightPin);
 
 	void attach();
 	void detach();
- 	void goForward(unsigned short speedPercent);
- 	void goForward(unsigned short speedPercent,
+ 	void goForward(uint8_t speedPercent);
+ 	void goForward(uint8_t speedPercent,
  			unsigned int durationMs,
  			maneuverCallback callback);
-	void goBackward(unsigned short speedPercent);
-	void goBackward(unsigned short speedPercent,
+	void goBackward(uint8_t speedPercent);
+	void goBackward(uint8_t speedPercent,
 			unsigned int durationMs,
 			maneuverCallback callback);
 	void turn(int angle,
@@ -60,19 +60,24 @@ public:
 	void stop();
 	bool isMoving();
 	bool isManeuvering();
+	void debug(bool debugEnabled);
 private:
-	unsigned short _leftPin, _rightPin;
+	uint8_t _leftPin, _rightPin;
 	signed short _currentSpeedPercent; // positive = forward, negative = backward
 	maneuver _maneuver;
+	char logBuffer[50];
 
 	Servo _left;
 	Servo _right;
 
-	int convertSpeedPercentToMicroseconds(int speedPercent);
+	bool _debug;
+
+	int convertSpeedPercentToMicroseconds(signed short speedPercentWithSign);
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
 	void startManeuverTimer(unsigned int durationMs, maneuverCallback callback);
 	void stopManeuverTimer();
+	void log(void);
 };
 
 #endif /* ServoMaster_H */
