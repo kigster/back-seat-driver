@@ -140,13 +140,14 @@ void checkRight() {
 	if (spaceAfterTurn < spaceAhead)
 		bot.turn(135, NULL);
 }
+```
 
 #### Debugging
 
 Calling the ```debug()``` function with enable debug mode:
 
 ```c++
-   robot.debug(true);
+    robot.debug(true);
 ```
 
 In this mode library sends information about what the robot is doing back to the 
