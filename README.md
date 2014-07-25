@@ -59,18 +59,7 @@ or
    if (!robot.isManeuvering())  { ... }
 ```
 
-### Example
-
-In this example the client uses Sonar sensor to detect objects ahead. If an object is found,
-the robot turns left (-)45 degrees, and then immediately checks again for distance.  If the distance
-to the objects ahead is farther than the previous reading, it stays on this route and keeps moving.
-Otherwise it rotates 90 degrees, to now be at +45 degrees to the original direction. If that
-direction isn't better than the front, it turns for additional 135 degrees, making it a full 180'
-degrees from the original direction.
-
-This example algorithm is setup in a just a few lines of code using C/C++ style function
-pointers used as callbacks at the end of each maneuver, but provide for a pretty effective
-obstacle avoidance strategy (but albeit a random direction).
+### Examples
 
 
 #### Initializing a 2-Servo Robot
@@ -102,7 +91,8 @@ In the below example we declar that motor 3 is front left, 4 is back left, 2 is 
 
 #### Avoiding Obstacles using Sonar Sensor
 
-Here is a bare-bones object avoidance logic using ```BackSeatDriver``` and Sonar.
+In this example we use a Sonar sensor to detect objects ahead.  The algorithm is setup in a just a few lines of code using C/C++ style function pointers used as callbacks at the end of each maneuver, but provide for a pretty effective
+obstacle avoidance strategy (but albeit a random direction).
 
 ```c++
 static TwoServoAdapter adapter = TwoServoAdapter(13, 12);
