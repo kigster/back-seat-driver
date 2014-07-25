@@ -27,7 +27,7 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 #include <utility/TwoServoAdapter.h>
 #include <BackSeatDriver.h>
 
-static TwoServoAdapter adapter = TwoServoAdapter(10, 11);
+static TwoServoAdapter adapter(10, 11);
 static BackSeatDriver bot = BackSeatDriver(&adapter);
 
 static const uint8_t leftWhiskerPin = 9, rightWhiskerPin = 6;

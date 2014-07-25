@@ -12,11 +12,17 @@
 
 class IMotorAdapter {
 public:
-	virtual void attach();
-	virtual void detach();
-	virtual void move(signed short speedPercent);
-	virtual void move(signed short leftSpeedPercent, signed short rightSpeedPercent);
+	virtual ~IMotorAdapter() = 0;
+	virtual void attach() = 0;
+	virtual void detach() = 0;
+	virtual void move(signed short speedPercent) = 0;
+	virtual void move(signed short leftSpeedPercent, signed short rightSpeedPercent) = 0;
 private:
 };
+
+
+inline IMotorAdapter::~IMotorAdapter()
+{
+}
 
 #endif /* IMOTORADAPTER_H_ */
