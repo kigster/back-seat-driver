@@ -159,7 +159,7 @@ void BackSeatDriver::log() {
 	if (ms - _lastDebugMs > SERVO_MIN_DEBUG_LOG_FREQ) {
 		_lastDebugMs = ms;
 
-		sprintf(millisSince, "%10d\t", (long)(_lastDebugMs - _initMs) );
+		sprintf(millisSince, "%10d\t", (int)(_lastDebugMs - _initMs) );
 		Serial.print(millisSince);
 		Serial.println(_logBuffer);
 	}
