@@ -6,8 +6,8 @@ autonomous vehicle based on various motor configurations expressed as concrete a
 
 Supported adapters include:
 
- * TwoServoAdapter: this is for robots with two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction.
- * DCMotorAdapter: this is for robots with 2 or 4 DC motors (not yet supported).
+ * _TwoServoAdapter_ – is for cars with two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction.
+ * _DCMotorAdapter_ – is for cars with 2 or 4 DC motors (still experimental).
 
 ### Library Features:
 
