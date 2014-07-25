@@ -1,7 +1,7 @@
 /*
  * This example uses HC-SR04 distance sensor to detect obstacles and change course.
 
- * Dependencies: NewPing, Servo
+ * Dependencies: Wire, ICP, NewPing, Servo
  *
  * Created on: Jul 16, 2014
  * Author: Konstantin Gredeskoul
@@ -15,7 +15,7 @@
 #define TRIGGER_PIN  3   // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     2   // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters).
-                         // Maximum sensor distance is rated at 400-500cm.
+
 
 #define DEBUG_VELOCITY true
 
@@ -24,9 +24,11 @@
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
-#include <ServoMaster.h>
+#include <utility/TwoServoAdapter.h>
+#include <BackSeatDriver.h>
 
-static ServoMaster bot = ServoMaster(10, 11);
+static TwoServoAdapter adapter = TwoServoAdapter(10, 11);
+static BackSeatDriver bot = BackSeatDriver(&adapter);
 
 static const uint8_t leftWhiskerPin = 9, rightWhiskerPin = 6;
 static const uint8_t maxSpeed = 100;

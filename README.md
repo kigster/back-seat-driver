@@ -1,8 +1,13 @@
-ServoMaster: Autonomous Vehicle Library for Arduino
+BackSeatDriver: Autonomous Vehicle Library for Arduino
 ====================================================
 
 This library provides a convenient non-blocking command API to programmatically drive an
-autonomous vehicle. Current implementation is aimed at a 2-wheeled robot, with the two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction (this is certainly true in the current version of the library, but may be more flexible in the future if need arises).
+autonomous vehicle based on various motor configurations expressed as concrete adapters. 
+
+Supported adapters include:
+
+ * TwoServoAdapter: this is for robots with two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction.
+ * DCMotorAdapter: this is for robots with 2 or 4 DC motors (not yet supported).
 
 ### Library Features:
 
@@ -11,7 +16,7 @@ autonomous vehicle. Current implementation is aimed at a 2-wheeled robot, with t
 * Un-timed moves, such as "go backward" indefinitely
 * Turn by angle, computed based on the the wheel ratio coefficient that can be adjusted for
   each size of tire
-* Much more linear speed curve, when mapping from speed in % from 0 to 100, to Servo microseconds.  Using ```tan()``` function allows to flatten out uneven Servo speed response curve (see graph in the PDF for Parallax Arduino Robot Shield Kit).
+* For ServoAdapter, much more linear speed curve, when mapping from speed in % from 0 to 100, to Servo microseconds.  Using ```tan()``` function allows to flatten out uneven Servo speed response curve (see graph in the PDF for Parallax Arduino Robot Shield Kit).
 
 ## Design Boundary
 
@@ -101,7 +106,7 @@ allow giving robot instructions that will stop the robot after the duration time
 passes (defined in milliseconds from the start of the maneuver).
 
 To remain within design goals of the library, the client should aim at not performing any
-blocking calls or delays itself, as doing so will make ```ServoMaster``` inaccurate, and will
+blocking calls or delays itself, as doing so will make ```BackSeatDriver``` inaccurate, and will
 prohibit from effectively integrating other similar libraries.  In the world where many things
 should be moving at once, nothing in the code path seems worthy of a dead pause of the ```delay```,
 although for simple tasks it sure makes coding easy.
@@ -143,7 +148,9 @@ obstacle avoidance strategy (but albeit a random direction).
 ```c++
 // Define the two pins used by the two Servos attached to the wheels (expected to be attached
 // in an opposite direction to each other
-ServoMaster robot = ServoMaster(13,12);
+
+static TwoServoAdapter adapter = TwoServoAdapter(13, 12);
+BackSeatDriver robot = BackSeatDriver(&adapter);
 
 void setup()
 {

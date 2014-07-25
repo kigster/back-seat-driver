@@ -1,5 +1,5 @@
 /*
- * ServoMaster.cpp
+ * BackSeatDriver.cpp
  *
  *  Created on: Jul 16, 2014
  *      Author: Konstantin Gredeskoul
@@ -7,34 +7,30 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#include "ServoMaster.h"
+#include "BackSeatDriver.h"
 #include <math.h>
 
-ServoMaster::ServoMaster(uint8_t leftPin, uint8_t rightPin) {
-	_leftPin = leftPin;
-	_rightPin = rightPin;
+BackSeatDriver::BackSeatDriver(IMotorAdapter *adapter) {
+	_adapter = adapter;
 	_debug = false;
 	_initMs = millis();
 	_lastDebugMs = 0;
 	stop();
 }
 
-void ServoMaster::attach() {
-	_left.attach(_leftPin);
-	_right.attach(_rightPin);
+void BackSeatDriver::attach() {
+	_adapter->attach();
 }
 
-void ServoMaster::detach() {
-	_left.detach();
-	_right.detach();
+void BackSeatDriver::detach() {
+	_adapter->detach();
 }
 
-void ServoMaster::moveAtCurrentSpeed() {
-	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(_currentSpeedPercent));
-	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(-_currentSpeedPercent));
+void BackSeatDriver::moveAtCurrentSpeed() {
+	_adapter->move(_currentSpeedPercent);
 }
 
-void ServoMaster::goForward(uint8_t speedPercent) {
+void BackSeatDriver::goForward(uint8_t speedPercent) {
 	if (_currentSpeedPercent == ((signed short) speedPercent)) return;
 	if (_debug) {
 		sprintf(_logBuffer, "goForward(%3d), currentSpeed = %3d", speedPercent, _currentSpeedPercent); log();
@@ -43,7 +39,7 @@ void ServoMaster::goForward(uint8_t speedPercent) {
 	moveAtCurrentSpeed();
 }
 
-void ServoMaster::goBackward(uint8_t speedPercent) {
+void BackSeatDriver::goBackward(uint8_t speedPercent) {
 	if (_currentSpeedPercent == ((signed short) speedPercent)) return;
 	if (_debug) {
 		sprintf(_logBuffer, "goBackward(%d)", speedPercent); log();
@@ -53,7 +49,7 @@ void ServoMaster::goBackward(uint8_t speedPercent) {
 	moveAtCurrentSpeed();
 }
 
-void ServoMaster::goForward(uint8_t speedPercent,
+void BackSeatDriver::goForward(uint8_t speedPercent,
 		unsigned int durationMs,
 		maneuverCallback callback) {
 
@@ -69,7 +65,7 @@ void ServoMaster::goForward(uint8_t speedPercent,
 	goForward(speedPercent);
 }
 
-void ServoMaster::goBackward(uint8_t speedPercent,
+void BackSeatDriver::goBackward(uint8_t speedPercent,
 		unsigned int durationMs,
 		maneuverCallback callback) {
 
@@ -84,7 +80,7 @@ void ServoMaster::goBackward(uint8_t speedPercent,
 	goBackward(speedPercent);
 }
 
-void ServoMaster::turn(int angle, maneuverCallback callback) {
+void BackSeatDriver::turn(int angle, maneuverCallback callback) {
 	if (_debug) {
 		sprintf(_logBuffer, "turn(%d, callback=%s)",
 				angle,
@@ -94,12 +90,11 @@ void ServoMaster::turn(int angle, maneuverCallback callback) {
 
 	stop();
 	signed short speed = 100 * (angle == 0 ? 1 : abs(angle) / angle);
-	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(speed));
-	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(speed));
-	startManeuverTimer(abs(angle) * 8, callback);
+	_adapter->move(speed, -speed);
+	startManeuverTimer(abs(angle) * 7, callback);
 }
 
-void ServoMaster::stop() {
+void BackSeatDriver::stop() {
 	if (_debug) {
 		sprintf(_logBuffer, "stop()");
 		log();
@@ -109,17 +104,17 @@ void ServoMaster::stop() {
 	moveAtCurrentSpeed();
 }
 
-bool ServoMaster::isMoving() {
+bool BackSeatDriver::isMoving() {
 	return (_currentSpeedPercent != 0);
 }
 
 
-bool ServoMaster::isManeuvering() {
+bool BackSeatDriver::isManeuvering() {
 	checkManeuveringState();
 	return _maneuver.running;
 }
 
-void ServoMaster::debug(bool debugEnabled) {
+void BackSeatDriver::debug(bool debugEnabled) {
 	_debug = debugEnabled;
 }
 
@@ -127,13 +122,13 @@ void ServoMaster::debug(bool debugEnabled) {
 //
 // Private
 
-void ServoMaster::stopManeuverTimer() {
+void BackSeatDriver::stopManeuverTimer() {
 	_maneuver.running = false;
 	_maneuver.durationMs = 0;
 	_maneuver.startMs = 0;
 }
 
-void ServoMaster::checkManeuveringState() {
+void BackSeatDriver::checkManeuveringState() {
 	if (_maneuver.running && millis() - _maneuver.startMs > _maneuver.durationMs) {
 		stop();
 
@@ -150,7 +145,7 @@ void ServoMaster::checkManeuveringState() {
 	}
 }
 
-void ServoMaster::startManeuverTimer(unsigned int durationMs,
+void BackSeatDriver::startManeuverTimer(unsigned int durationMs,
 		maneuverCallback callback) {
 	_maneuver.callback = callback;
 	_maneuver.startMs = millis();
@@ -158,31 +153,7 @@ void ServoMaster::startManeuverTimer(unsigned int durationMs,
 	_maneuver.running = true;
 }
 
-// speed can be between -100 and +100
-int ServoMaster::convertSpeedPercentToMicroseconds(signed short speedPercentWithSign) {
-	int value = 0;
-#ifdef SERVO_VELOCITY_LINEAR
-	// linear formular, goes between 1500 (0%) and 1600 (100%).
-	value = (int) (
-			SERVO_MIN_MS + SERVO_HALF_RANGE_MS +
-			(int) ((0.5) * SERVO_HALF_RANGE_MS * (float) speedPercentWithSign / 100.0);
-#endif
-#ifdef SERVO_VELOCITY_TRIG
-	value = (int) (
-			SERVO_MIN_MS + SERVO_HALF_RANGE_MS +
-			(SERVO_HALF_RANGE_MS / 2) * tan((double)speedPercentWithSign / 100.0) / 1.55);
-#endif
-
-#ifdef DEBUG_VELOCITY
-	if (_debug) {
-		sprintf(_logBuffer, "speed value is %d for %d %%, range is %d", value, speedPercentWithSign,
-				SERVO_HALF_RANGE_MS); log();
-	}
-#endif
-	return value;
-}
-
-void ServoMaster::log() {
+void BackSeatDriver::log() {
 	char millisSince[15];
 	unsigned long ms = millis();
 	if (ms - _lastDebugMs > SERVO_MIN_DEBUG_LOG_FREQ) {
