@@ -63,7 +63,8 @@ private:
 
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
-	void startManeuverTimer(unsigned int durationMs, maneuverCallback callback);
+	void startManeuverTimer(unsigned int durationMs,
+			maneuverCallback callback);
 	void stopManeuverTimer();
 	void log(void);
 };
