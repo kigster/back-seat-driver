@@ -1,5 +1,7 @@
 BackSeatDriver	KEYWORD1
 BackSeatDriver	KEYWORD2
+TwoServoAdapter	KEYWORD1
+TwoServoAdapter	KEYWORD2
 attach	KEYWORD2
 detach	KEYWORD2
 goForward	KEYWORD2
