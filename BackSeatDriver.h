@@ -18,9 +18,8 @@
 
 #include <utility/IMotorAdapter.h>
 
-#define SERVO_VELOCITY_TRIG
-#define SERVO_LOG_BUFFER_LEN 50
-#define SERVO_MIN_DEBUG_LOG_FREQ 50
+#define LOG_BUFFER_LEN 50
+#define MIN_DEBUG_LOG_FREQ 50
 
 typedef void(*maneuverCallback)(void);
 
@@ -57,7 +56,7 @@ private:
 	// positive = forward, negative = backward
 	signed short _currentSpeedPercent;
 	maneuver _maneuver;
-	char _logBuffer[SERVO_LOG_BUFFER_LEN];
+	char _logBuffer[LOG_BUFFER_LEN];
 	unsigned long _initMs, _lastDebugMs;
 
 	bool _debug;

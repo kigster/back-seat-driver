@@ -156,7 +156,7 @@ void BackSeatDriver::startManeuverTimer(unsigned int durationMs,
 void BackSeatDriver::log() {
 	char millisSince[15];
 	unsigned long ms = millis();
-	if (ms - _lastDebugMs > SERVO_MIN_DEBUG_LOG_FREQ) {
+	if (ms - _lastDebugMs > MIN_DEBUG_LOG_FREQ) {
 		_lastDebugMs = ms;
 
 		sprintf(millisSince, "%10d\t", (int)(_lastDebugMs - _initMs) );
