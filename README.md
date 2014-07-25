@@ -163,22 +163,18 @@ Serial port. Here is an example below (first column is milliseconds since progra
      17052	stop()
 ```     
 
-```
-
 ### Working Model
 
-I assembled this model in several hours, but added the Ultrasound distance sensor.  The sensor seems 
-to be very narrow path focused. 
+Here is a model I assembled, with an added Ultrasound distance sensor.  
+The sensor seems to be pretty focused on a narrow path. 
 
 ![Parallax Arduino Robot](bot.jpg)
 
 ### Disclaimer and Invitation to Collaborate
 
-This project is also an eternal learning quest for the author, who only started tinkering with Arduino at the end of June 2014. Therefore please keep in mind that this library is not
-written by an Arduino expert, although the author does have an extensive software development background in other languages.
+This project is also an eternal learning quest for the author, who only started tinkering with Arduino at the end of June 2014. Therefore please keep in mind that this library is not written by an Arduino expert, although the author does have an extensive software development background in other languages.
 
-Any suggestions or modifications are welcome, and will be considered, discussed and decided
-on in the issues or pull requests.
+Any suggestions or modifications are welcome, and will be considered, discussed and decided on in the issues or pull requests.
 
 
 ## Contributing
