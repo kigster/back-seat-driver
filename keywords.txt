@@ -1,5 +1,5 @@
-ServoMaster	KEYWORD1
-ServoMaster	KEYWORD2
+BackSeatDriver	KEYWORD1
+BackSeatDriver	KEYWORD2
 attach	KEYWORD2
 detach	KEYWORD2
 goForward	KEYWORD2
