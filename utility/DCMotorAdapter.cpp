@@ -66,6 +66,6 @@ void DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
 		} else {
 			_motors[index]->run(FORWARD);
 		}
-		_motors[index]->setSpeed(speedFromPercentToValue(speedPercent));
 	}
+	_motors[index]->setSpeed(speedFromPercentToValue(speedPercent));
 }
