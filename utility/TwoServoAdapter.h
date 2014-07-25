@@ -32,7 +32,6 @@ public:
 	virtual ~TwoServoAdapter();
 	virtual void attach();
 	virtual void detach();
-	virtual void move(signed short speedPercent);
 	virtual void move(signed short leftSpeedPercent, signed short rightSpeedPercent);
 private:
 	uint8_t _leftPin, _rightPin;

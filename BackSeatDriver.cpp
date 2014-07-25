@@ -27,7 +27,7 @@ void BackSeatDriver::detach() {
 }
 
 void BackSeatDriver::moveAtCurrentSpeed() {
-	_adapter->move(_currentSpeedPercent);
+	_adapter->move(_currentSpeedPercent, _currentSpeedPercent);
 }
 
 void BackSeatDriver::goForward(uint8_t speedPercent) {

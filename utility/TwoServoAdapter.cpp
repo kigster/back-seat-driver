@@ -34,10 +34,6 @@ void TwoServoAdapter::move(signed short leftSpeed, signed short rightSpeed) {
 	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(-rightSpeed));
 }
 
-void TwoServoAdapter::move(signed short speed) {
-	move(speed, speed);
-}
-
 // speed can be between -100 and +100
 int TwoServoAdapter::convertSpeedPercentToMicroseconds(signed short speedPercentWithSign) {
 	int value = 0;
