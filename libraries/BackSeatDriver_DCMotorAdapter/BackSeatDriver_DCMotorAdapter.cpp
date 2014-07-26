@@ -1,5 +1,5 @@
 /*
- * DCMotorAdapter.cpp
+ * BackSeatDriver_DCMotorAdapter.cpp
  *
  *  Created on: Jul 25, 2014
  *      Author: Konstantin Gredeskoul
@@ -7,9 +7,10 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#include "DCMotorAdapter.h"
 
-DCMotorAdapter::DCMotorAdapter(uint8_t numMotors, signed short motorMap[]) {
+#include "BackSeatDriver_DCMotorAdapter.h"
+
+BackSeatDriver_DCMotorAdapter::BackSeatDriver_DCMotorAdapter(uint8_t numMotors, signed short motorMap[]) {
 	_numMotors = numMotors;
 
 	for (short i = 0; i < _numMotors; i++) {
@@ -17,12 +18,12 @@ DCMotorAdapter::DCMotorAdapter(uint8_t numMotors, signed short motorMap[]) {
 	}
 }
 
-DCMotorAdapter::~DCMotorAdapter() {
+BackSeatDriver_DCMotorAdapter::~BackSeatDriver_DCMotorAdapter() {
 	//
 }
 
 
-void DCMotorAdapter::attach() {
+void BackSeatDriver_DCMotorAdapter::attach() {
 	_AFMS = Adafruit_MotorShield();
 	_AFMS.begin();
 	for (short i = 0; i < _numMotors; i++) {
@@ -30,13 +31,13 @@ void DCMotorAdapter::attach() {
 	}
 }
 
-void DCMotorAdapter::detach() {
+void BackSeatDriver_DCMotorAdapter::detach() {
 	for (short i = 0; i < _numMotors; i++) {
 		_motors[i]->setSpeed(0);
 	}
 }
 
-void DCMotorAdapter::move(signed short speedPercentLeft, signed short speedPercentRight) {
+void BackSeatDriver_DCMotorAdapter::move(signed short speedPercentLeft, signed short speedPercentRight) {
 	for (uint8_t i = 0; i < _numMotors / 2; i++) {
 		configureMotor(i, speedPercentLeft);
 	}
@@ -45,11 +46,11 @@ void DCMotorAdapter::move(signed short speedPercentLeft, signed short speedPerce
 	}
 }
 
-unsigned short DCMotorAdapter::speedFromPercentToValue(signed short speedPercent) {
+unsigned short BackSeatDriver_DCMotorAdapter::speedFromPercentToValue(signed short speedPercent) {
 	return 255 * abs(1.0 * speedPercent) / 100.0;
 }
 
-bool DCMotorAdapter::isMotorReversed(uint8_t motor) {
+bool BackSeatDriver_DCMotorAdapter::isMotorReversed(uint8_t motor) {
 	if (motor >= _numMotors) {
 		return false;
 	}
@@ -57,7 +58,7 @@ bool DCMotorAdapter::isMotorReversed(uint8_t motor) {
 }
 
 
-void DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
+void BackSeatDriver_DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
 	if (speedPercent == 0) {
 		_motors[index]->run(RELEASE);
 	} else {
@@ -69,3 +70,5 @@ void DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
 	}
 	_motors[index]->setSpeed(speedFromPercentToValue(speedPercent));
 }
+
+

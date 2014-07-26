@@ -2,12 +2,12 @@ BackSeatDriver: Autonomous Vehicle Library for Arduino
 ====================================================
 
 This library provides a convenient non-blocking command API to programmatically drive an
-autonomous vehicle based on various motor configurations expressed as concrete adapters. 
+autonomous vehicle based on various motor configurations expressed as concrete adapters.
 
 Supported adapters include:
 
- * _TwoServoAdapter_ – is for cars with two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction.
- * _DCMotorAdapter_ – is for cars with 2 or 4 DC motors (still experimental).
+ * _BackSeatDriver_TwoServoAdapter_ – is for cars with two Servo motors setup opposite each other. Therefore to move the robot forward (or backward), two Servos need to rotate in the opposite direction.
+ * _BackSeatDriver_DCMotorAdapter_ – is for cars with 2 or 4 DC motors (still experimental).
 
 ### Library Features
 
@@ -39,24 +39,24 @@ Any Arduino card with 2 Servo motors attached would work.  For most Servo motors
 The speed value passed into the APIs provided by the library are expected to be always positive, and expressed in percent % of the total max speed of the motors.
 
 ```c++
-    // puts motors into 100% speed, forward motion,
-    // and immediately return from the function
-	robot.goForward(100);
+            // puts motors into 100% speed, forward motion,
+            // and immediately return from the function
+            robot.goForward(100);
 ```
 
 or
 
 ```c++
-   // go backwards @ 50% speed, for 1 second, and then call
-   // turnAround() local function defined somewhere in this context
-   robot.goBackward (50, 1000, &turnAround);
+            // go backwards @ 50% speed, for 1 second, and then call
+            // turnAround() local function defined somewhere in this context
+            robot.goBackward (50, 1000, &turnAround);
 
-   ....
+            ....
 
-   // somewhere else in the code
+            // somewhere else in the code
 
-   // wait for the any maneuvers to finish
-   if (!robot.isManeuvering())  { ... }
+            // wait for the any maneuvers to finish
+            if (!robot.isManeuvering())  { ... }
 ```
 
 ### Examples
@@ -66,10 +66,19 @@ or
 
 
 ```c++
+            // load specific Adapter for our motors
+            #include <BackSeatDriver_TwoServoAdapter.h>
 
-	TwoServoAdapter adapter = TwoServoAdapter(13, 12);
-	BackSeatDriver robot = BackSeatDriver(&adapter);
-	// then you can use, etc.
+	// now load the main library
+	#include <BackSeatDriver.h>
+
+	// initialize the adapter with two pins assigned to the two servos
+	BackSeatDriver_TwoServoAdapter adapter(13, 12);
+
+	// intialize BackSeatDriver itself, passing it the driver.
+	BackSeatDriver robot(&adapter);
+
+	// now we can ask our robot to move...
 	robot.goForward(100); // move forward at 100% speed
 ```
 
@@ -82,10 +91,17 @@ one of the motors in reverse, then simply pass that motor number as negative int
 In the below example we declar that motor 3 is front left, 4 is back left, 2 is back right (but reversed) and 1 is front right (but also reversed). This is a very powerful and simple way to avoid having to resolder or re-wire motors after assembly :)
 
 ```c++
+    // load specific adapter we are using
+	#include <BackSeatDriver_DCMotorAdapter.h>
+
+	// now load the main library
+	#include <BackSeatDriver.h>
+
 	signed short motorLayout[] = { 3, 4, -2, -1 };
-	DCMotorAdapter adapter(4, motorLayout);
+
+	BackSeatDriver_DCMotorAdapter adapter(4, motorLayout);
 	BackSeatDriver racer(&adapter);
-	
+
 	racer.goForward(50); // move forward at 50% speed
 ```
 
@@ -95,7 +111,7 @@ In this example we use a Sonar sensor to detect objects ahead.  The algorithm is
 obstacle avoidance strategy (but albeit a random direction).
 
 ```c++
-static TwoServoAdapter adapter = TwoServoAdapter(13, 12);
+static BackSeatDriver_TwoServoAdapter adapter = BackSeatDriver_TwoServoAdapter(13, 12);
 static BackSeatDriver robot = BackSeatDriver(&adapter);
 
 void setup()
@@ -118,7 +134,7 @@ void loop()
 	if (!bot.isManeuvering()) {
 
 	    // this is the default motion
-		bot.goForward(100);
+		robot.goForward(100);
 
 		// check distance to objects ahead
 		spaceAhead = detectSpaceAhead();
@@ -132,13 +148,13 @@ void loop()
 void checkLeft() {
 	int spaceAfterTurn = spaceAhead();
 	if (spaceAfterTurn < spaceAhead)
-		bot.turn(90, &checkRight);
+		robot.turn(90, &checkRight);
 }
 
 void checkRight() {
 	int spaceAfterTurn = spaceAhead();
 	if (spaceAfterTurn < spaceAhead)
-		bot.turn(135, NULL);
+		robot.turn(135, NULL);
 }
 ```
 
@@ -150,7 +166,7 @@ Calling the ```debug()``` function with enable debug mode:
     robot.debug(true);
 ```
 
-In this mode library sends information about what the robot is doing back to the 
+In this mode library sends information about what the robot is doing back to the
 Serial port. Here is an example below (first column is milliseconds since program start).
 
 ```
@@ -161,12 +177,12 @@ Serial port. Here is an example below (first column is milliseconds since progra
      16577	goForward(100), currentSpeed =  72
      16690	turn(-45, callback=yes)
      17052	stop()
-```     
+```
 
 ### Working Model
 
-Here is a model I assembled, with an added Ultrasound distance sensor.  
-The sensor seems to be pretty focused on a narrow path. 
+Here is a model I assembled, with an added Ultrasound distance sensor.
+The sensor seems to be pretty focused on a narrow path.
 
 ![Parallax Arduino Robot](bot.jpg)
 

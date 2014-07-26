@@ -7,8 +7,9 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#ifndef TWOSERVOADAPTER_H_
-#define TWOSERVOADAPTER_H_
+
+#ifndef BACKSEATDRIVER_TWOSERVOADAPTER_H_
+#define BACKSEATDRIVER_TWOSERVOADAPTER_H_
 
 #ifndef SERVO_MIN_MS
 #define SERVO_MIN_MS 1300
@@ -23,13 +24,14 @@
 #define SERVO_HALF_RANGE_MS (SERVO_MAX_MS - SERVO_MIN_MS) / 2
 #endif
 
-#include <utility/IMotorAdapter.h>
+// from BackSeatDriver library
+#include <BackSeatDriver_IMotorAdapter.h>
 #include <Servo.h>
 
-class TwoServoAdapter  : public IMotorAdapter {
+class BackSeatDriver_TwoServoAdapter  : public BackSeatDriver_IMotorAdapter {
 public:
-	TwoServoAdapter(uint8_t leftPin, uint8_t rightPin);
-	virtual ~TwoServoAdapter();
+	BackSeatDriver_TwoServoAdapter(uint8_t leftPin, uint8_t rightPin);
+	virtual ~BackSeatDriver_TwoServoAdapter();
 	virtual void attach();
 	virtual void detach();
 	virtual void move(signed short leftSpeedPercent, signed short rightSpeedPercent);
@@ -40,4 +42,5 @@ private:
 	Servo _right;
 };
 
-#endif /* TWOSERVOADAPTER_H_ */
+#endif /* BACKSEATDRIVER_TWOSERVOADAPTER_H_ */
+

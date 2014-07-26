@@ -7,35 +7,35 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#include <utility/TwoServoAdapter.h>
+#include <BackSeatDriver_TwoServoAdapter.h>
 #include <math.h>
 
-TwoServoAdapter::TwoServoAdapter(uint8_t leftPin, uint8_t rightPin) {
+BackSeatDriver_TwoServoAdapter::BackSeatDriver_TwoServoAdapter(uint8_t leftPin, uint8_t rightPin) {
 	_leftPin = leftPin;
 	_rightPin = rightPin;
 }
 
-TwoServoAdapter::~TwoServoAdapter() {
+BackSeatDriver_TwoServoAdapter::~BackSeatDriver_TwoServoAdapter() {
 	//
 }
 
-void TwoServoAdapter::attach() {
+void BackSeatDriver_TwoServoAdapter::attach() {
 	_left.attach(_leftPin);
 	_right.attach(_rightPin);
 }
 
-void TwoServoAdapter::detach() {
+void BackSeatDriver_TwoServoAdapter::detach() {
 	_left.detach();
 	_right.detach();
 }
 
-void TwoServoAdapter::move(signed short leftSpeed, signed short rightSpeed) {
+void BackSeatDriver_TwoServoAdapter::move(signed short leftSpeed, signed short rightSpeed) {
 	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(leftSpeed));
 	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(-rightSpeed));
 }
 
 // speed can be between -100 and +100
-int TwoServoAdapter::convertSpeedPercentToMicroseconds(signed short speedPercentWithSign) {
+int BackSeatDriver_TwoServoAdapter::convertSpeedPercentToMicroseconds(signed short speedPercentWithSign) {
 	int value = 0;
 #ifdef SERVO_VELOCITY_LINEAR
 	// linear formula, goes between 1500 (0%) and 1600 (100%).

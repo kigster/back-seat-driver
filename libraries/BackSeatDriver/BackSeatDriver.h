@@ -7,8 +7,8 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#ifndef BackSeatDriver_H
-#define BackSeatDriver_H
+#ifndef BACKSEATDRIVER_H
+#define BACKSEATDRIVER_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include <Arduino.h>
@@ -16,7 +16,7 @@
 	#include <WProgram.h>
 #endif
 
-#include <utility/IMotorAdapter.h>
+#include "BackSeatDriver_IMotorAdapter.h"
 
 #define LOG_BUFFER_LEN 50
 #define MIN_DEBUG_LOG_FREQ 50
@@ -33,7 +33,7 @@ typedef struct maneuverStruct {
 
 class BackSeatDriver {
 public:
-	BackSeatDriver(IMotorAdapter *adapter);
+	BackSeatDriver(BackSeatDriver_IMotorAdapter *adapter);
 
 	void attach();
 	void detach();
@@ -52,7 +52,7 @@ public:
 	bool isManeuvering();
 	void debug(bool debugEnabled);
 private:
-	IMotorAdapter *_adapter;
+	BackSeatDriver_IMotorAdapter *_adapter;
 	// positive = forward, negative = backward
 	signed short _currentSpeedPercent;
 	maneuver _maneuver;
@@ -69,4 +69,4 @@ private:
 	void log(void);
 };
 
-#endif /* BackSeatDriver_H */
+#endif /* BACKSEATDRIVER_H */

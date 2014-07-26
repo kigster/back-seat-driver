@@ -10,12 +10,12 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#ifndef IMOTORADAPTER_H_
-#define IMOTORADAPTER_H_
+#ifndef BACKSEATDRIVER_IMOTORADAPTER_H_
+#define BACKSEATDRIVER_IMOTORADAPTER_H_
 
-class IMotorAdapter {
+class BackSeatDriver_IMotorAdapter {
 public:
-	virtual ~IMotorAdapter() = 0;
+	virtual ~BackSeatDriver_IMotorAdapter() = 0;
 
 	// attach/initialize as necessary
 	virtual void attach() = 0;
@@ -33,8 +33,8 @@ private:
 };
 
 
-inline IMotorAdapter::~IMotorAdapter()
+inline BackSeatDriver_IMotorAdapter::~BackSeatDriver_IMotorAdapter()
 {
 }
 
-#endif /* IMOTORADAPTER_H_ */
+#endif /* BACKSEATDRIVER_IMOTORADAPTER_H_ */

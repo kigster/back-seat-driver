@@ -10,7 +10,7 @@
 #include "BackSeatDriver.h"
 #include <math.h>
 
-BackSeatDriver::BackSeatDriver(IMotorAdapter *adapter) {
+BackSeatDriver::BackSeatDriver(BackSeatDriver_IMotorAdapter *adapter) {
 	_adapter = adapter;
 	_debug = false;
 	_initMs = millis();

@@ -1,5 +1,5 @@
 /*
- * DCMotorAdapter.h
+ * BackSeatDriver_DCMotorAdapter.h
  *
  * Adapter for DC Motors using Adafruit MotorShield.
  *
@@ -9,8 +9,9 @@
  *  (c) 2014 All rights reserved.  Please see LICENSE.
  */
 
-#ifndef DCMotorAdapter_H
-#define DCMotorAdapter_H
+
+#ifndef BackSeatDriver_DCMotorAdapter_H
+#define BackSeatDriver_DCMotorAdapter_H
 
 #define MAX_MOTORS 6
 
@@ -20,10 +21,10 @@
 #include <Arduino.h>
 #endif
 
-#include <utility/IMotorAdapter.h>
+#include <BackSeatDriver_IMotorAdapter.h>
 #include <Adafruit_MotorShield.h>
 
-class DCMotorAdapter : public IMotorAdapter {
+class BackSeatDriver_DCMotorAdapter : public BackSeatDriver_IMotorAdapter {
 public:
 
 	// to configure DC motors, create an array as below, that lists motors
@@ -33,13 +34,13 @@ public:
 	// configure this mapping regardless how your motors are wired up.
 	//
 	// signed short motorLayout[] = { 3, 4, 2, -1 };
-	// DCMotorAdapter adapter(4, motorLayout);
+	// BackSeatDriver_DCMotorAdapter adapter(4, motorLayout);
 	//
 	// In the above example motor 3 is left front, and motor 1 is right front,
 	// but motor 1 was wired with reverse polarity so negative number compensates.
 
-	DCMotorAdapter(uint8_t numMotors, signed short motorMap[]);
-	virtual ~DCMotorAdapter();
+	BackSeatDriver_DCMotorAdapter(uint8_t numMotors, signed short motorMap[]);
+	virtual ~BackSeatDriver_DCMotorAdapter();
 	virtual void attach();
 	virtual void detach();
 	virtual void move(signed short leftSpeedPercent, signed short rightSpeedPercent);
@@ -53,4 +54,4 @@ private:
 	void configureMotor(uint8_t index, signed short speedPercent);
 };
 
-#endif /* DCMotorAdapter_H */
+#endif /* BackSeatDriver_DCMotorAdapter_H */
