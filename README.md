@@ -201,8 +201,9 @@ So if the ```turningDelayCoefficient``` is set to 10, then 90-degree turn will t
 
 The default for this value is 7.
 
-Future version of the library may offer each adapter to offer a custom way of computing turn delay and speed,
-in case where linear relationship may not be appropriate.
+Future version of the library may allow each adapter to offer a custom way of computing turn delay and speed,
+if a linear relationship is not appropriate (for example smaller terms take longer to complete, while larger turns
+are faster).
 
 #### Debugging
 
