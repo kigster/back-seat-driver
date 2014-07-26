@@ -1,7 +1,9 @@
 /*
  * This example uses HC-SR04 distance sensor to detect obstacles and change course.
 
- * Dependencies: Wire, ICP, NewPing, Servo, BackSeatDriver, BackSeatDriver_TwoServoAdapter
+ * IMPORTANT: to make this work you need to Import the following libraries:
+ *
+ *    Wire, Servo, NewPing, BackSeatDriver, BackSeatDriver_TwoServoAdapter
  *
  * Created on: Jul 16, 2014
  * Author: Konstantin Gredeskoul

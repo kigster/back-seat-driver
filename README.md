@@ -39,24 +39,24 @@ Any Arduino card with 2 Servo motors attached would work.  For most Servo motors
 The speed value passed into the APIs provided by the library are expected to be always positive, and expressed in percent % of the total max speed of the motors.
 
 ```c++
-            // puts motors into 100% speed, forward motion,
-            // and immediately return from the function
-            robot.goForward(100);
+// puts motors into 100% speed, forward motion,
+// and immediately return from the function
+robot.goForward(100);
 ```
 
 or
 
 ```c++
-            // go backwards @ 50% speed, for 1 second, and then call
-            // turnAround() local function defined somewhere in this context
-            robot.goBackward (50, 1000, &turnAround);
+// go backwards @ 50% speed, for 1 second, and then call
+// turnAround() local function defined somewhere in this context
+robot.goBackward (50, 1000, &turnAround);
 
-            ....
+....
 
-            // somewhere else in the code
+// somewhere else in the code
 
-            // wait for the any maneuvers to finish
-            if (!robot.isManeuvering())  { ... }
+// wait for the any maneuvers to finish
+if (!robot.isManeuvering())  { ... }
 ```
 
 ### Examples
@@ -66,20 +66,20 @@ or
 
 
 ```c++
-            // load specific Adapter for our motors
-            #include <BackSeatDriver_TwoServoAdapter.h>
+// load specific Adapter for our motors
+#include <BackSeatDriver_TwoServoAdapter.h>
 
-	// now load the main library
-	#include <BackSeatDriver.h>
+// now load the main library
+#include <BackSeatDriver.h>
 
-	// initialize the adapter with two pins assigned to the two servos
-	BackSeatDriver_TwoServoAdapter adapter(13, 12);
+// initialize the adapter with two pins assigned to the two servos
+BackSeatDriver_TwoServoAdapter adapter(13, 12);
 
-	// intialize BackSeatDriver itself, passing it the driver.
-	BackSeatDriver robot(&adapter);
+// intialize BackSeatDriver itself, passing it the driver.
+BackSeatDriver robot(&adapter);
 
-	// now we can ask our robot to move...
-	robot.goForward(100); // move forward at 100% speed
+// now we can ask our robot to move...
+robot.goForward(100); // move forward at 100% speed
 ```
 
 #### Initializing a 4-DC Motor Robot
@@ -91,18 +91,18 @@ one of the motors in reverse, then simply pass that motor number as negative int
 In the below example we declar that motor 3 is front left, 4 is back left, 2 is back right (but reversed) and 1 is front right (but also reversed). This is a very powerful and simple way to avoid having to resolder or re-wire motors after assembly :)
 
 ```c++
-    // load specific adapter we are using
-	#include <BackSeatDriver_DCMotorAdapter.h>
+// load specific adapter we are using
+#include <BackSeatDriver_DCMotorAdapter.h>
 
-	// now load the main library
-	#include <BackSeatDriver.h>
+// now load the main library
+#include <BackSeatDriver.h>
 
-	signed short motorLayout[] = { 3, 4, -2, -1 };
+signed short motorLayout[] = { 3, 4, -2, -1 };
 
-	BackSeatDriver_DCMotorAdapter adapter(4, motorLayout);
-	BackSeatDriver racer(&adapter);
+BackSeatDriver_DCMotorAdapter adapter(4, motorLayout);
+BackSeatDriver racer(&adapter);
 
-	racer.goForward(50); // move forward at 50% speed
+racer.goForward(50); // move forward at 50% speed
 ```
 
 #### Avoiding Obstacles using Sonar Sensor
