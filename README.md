@@ -178,12 +178,12 @@ robot.goForward(50);             // set current speed at 50% of max
 ```
 
 For a DC motor example, where 255 would be the max value sent to the motor, the actual value
-will be computed as ```255 * 0.8 * 0.5 = 102```.  Typical you should call ```setMovingSpeedPercent()```
+will be computed as ```255 * 0.8 * 0.5 = 102```.  Typically you would call ```setMovingSpeedPercent()```
 once in the ```setup()``` to configure your specific robot.
 
 #### Adjusting Turning Speed and Delay Coefficient
 
-When turns are requested, robot is sent a signal to rotate left/right wheels in opposite direction.
+When turns are requested, robot is sent a signal to rotate left/right wheels in the opposite direction.
 There are two main parameters controlling this:
 
  1. how fast should the wheels rotate during a turn?
