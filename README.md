@@ -158,16 +158,52 @@ void checkRight() {
 }
 ```
 
-#### Adjusting Movement and Turning Speed
+#### Adjusting Movement Speed
 
 Not all bots are made equal, and sometimes you'll want to adjust movement and turning speed.
 
-You can do that with the call:
+By default, setting movement speed of 100% sets the robot at max speed. This may not always
+be desired.  For this purpose the following call exists:
 
 ```c++
 // leave movement speed at 100%, but reduce turning speed to 80% of the default.
-robot.adjustMovement(100, 80);
+robot.setMovingSpeedPercent(80); // multiply all speed arguments from now on by 0.8
 ```
+
+This configures a global coefficient, which is applied to all arguments of forward and backward
+movement.  For example,
+
+```c++
+robot.setMovingSpeedPercent(80); // set global speed adjustment coefficient
+robot.goForward(50);             // set current speed at 50% of max
+```
+
+For a DC motor example, where 255 would be the max value sent to the motor, the actual value
+will be computed as ```255 * 0.8 * 0.5 = 102```.  Typical you should call ```setMovingSpeedPercent()```
+once in the ```setup()``` to configure your specific robot.
+
+#### Adjusting Turning Speed and Delay Coefficient
+
+When turns are requested, robot is sent a signal to rotate left/right wheels in opposite direction.
+There are two main parameters controlling this:
+
+ 1. how fast should the wheels rotate during a turn?
+ 2. how long should the turn last?
+
+The default for how fast wheels rotate is 100%, which if very often not what you want.  Call
+```setTurningSpeedPercent()``` to a value less than 100 to adjust this.  Please note that this value is
+independent of the ```setMovingSpeedPercent()``` and is always computed based on the max speed of the robot,
+not the adjusted speed.
+
+The default for how long the turn lasts is computed based on a simple linear formula: ```angle x turningDelayCoefficient ```
+where ```angle``` is in degrees (say 90, or 180).
+
+So if the ```turningDelayCoefficient``` is set to 10, then 90-degree turn will take 900ms.
+
+The default for this value is 7.
+
+Future version of the library may offer each adapter to offer a custom way of computing turn delay and speed,
+in case where linear relationship may not be appropriate.
 
 #### Debugging
 

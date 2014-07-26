@@ -119,7 +119,8 @@ void setup() {
 
 	bot.attach();
 	bot.debug(true);
-	bot.adjustMovement(100, 80); // 100% speed, but 80% of turning speed.
+
+	bot.setTurningSpeedPercent(80);
 
 	pinMode(leftWhiskerPin, INPUT);
 	pinMode(rightWhiskerPin, INPUT);

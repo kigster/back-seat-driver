@@ -52,16 +52,24 @@ public:
 	bool isManeuvering();
 	void debug(bool debugEnabled);
 
-	// each adapter provides it's own nominal speed of movement and turning,
-	// however individual robots may need adjustment
-	void adjustMovement(
-		// 0 < .. < 10,000, where 100 = no change, 50 = half speed, 200 is double, etc.
-		unsigned short movingSpeedPercentCoefficient,
-		// 0 < .. < 10,000, where 100 = no change, 50 = half speed, 200 is double, etc.
-		unsigned short turningSpeedPercentCoefficient);
+	// set to 100 to go full speed; anything less than 100 to cap max speed
+	// and reduce the speed range.
+	void setMovingSpeedPercent(unsigned short movingSpeedPercent);
+
+	// speed of the turn as a percentage of max speed
+	void setTurningSpeedPercent(unsigned short turningSpeedPercent);
+
+	// multiplier determining how long turns last.  Turn duration is determined by
+	// multiplying angle (in degrees) by this coefficient, eg, for 90' it's
+	// 90 x turningDelayCoefficient (ms).  Default is 7.
+	void setTurningDelayCoefficient(unsigned short turningDelayCoefficient);
 
 private:
-	unsigned short _movingSpeedPercent, _turningSpeedPercent;
+	unsigned short
+		_movingSpeedPercent,
+		_turningSpeedPercent,
+		_turningDelayCoefficient;
+
 	BackSeatDriver_IMotorAdapter *_adapter;
 	// positive = forward, negative = backward
 	signed short _currentSpeedPercent;
@@ -71,7 +79,10 @@ private:
 
 	bool _debug;
 
-	void moveAtSpeed(signed short leftPercent, signed short rightPercent);
+	void moveAtSpeed(
+			signed short leftPercent,
+			signed short rightPercent,
+			unsigned short adjustmentPercent);
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
 	void startManeuverTimer(unsigned int durationMs,

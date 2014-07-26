@@ -16,6 +16,7 @@ BackSeatDriver::BackSeatDriver(BackSeatDriver_IMotorAdapter *adapter) {
 	_initMs = millis();
 	_lastDebugMs = 0;
 	_turningSpeedPercent = _movingSpeedPercent = 100;
+	_turningDelayCoefficient = 7; // multiplier for how long to wait for a turn.
 	stop();
 }
 
@@ -32,7 +33,7 @@ void BackSeatDriver::goForward(uint8_t speedPercent) {
 	if (_debug) {
 		sprintf(_logBuffer, "goForward(%3d), currentSpeed = %3d", speedPercent, _currentSpeedPercent); log();
 	}
-	_currentSpeedPercent = (signed short) speedPercent;
+	_currentSpeedPercent = (signed short) constrain(speedPercent, 0, 100);
 	moveAtCurrentSpeed();
 }
 
@@ -42,7 +43,7 @@ void BackSeatDriver::goBackward(uint8_t speedPercent) {
 		sprintf(_logBuffer, "goBackward(%d)", speedPercent); log();
 	}
 
-	_currentSpeedPercent = -((signed short) speedPercent);
+	_currentSpeedPercent = -((signed short) constrain(speedPercent, 0, 100));
 	moveAtCurrentSpeed();
 }
 
@@ -88,8 +89,8 @@ void BackSeatDriver::turn(int angle, maneuverCallback callback) {
 	stop();
 	signed short speed = 100 * (angle == 0 ? 1 : abs(angle) / angle);
 	speed = (signed short) (1.0f * (float)speed * (float)_turningSpeedPercent / 100.0f);
-	moveAtSpeed(speed, -speed);
-	startManeuverTimer(abs(angle) * 7, callback);
+	moveAtSpeed(speed, -speed, _turningSpeedPercent);
+	startManeuverTimer(abs(angle) * _turningDelayCoefficient, callback);
 }
 
 void BackSeatDriver::stop() {
@@ -116,28 +117,32 @@ void BackSeatDriver::debug(bool debugEnabled) {
 	_debug = debugEnabled;
 }
 
-void BackSeatDriver::adjustMovement(
-		unsigned short movingSpeedPercentCoefficient,
-		unsigned short turningSpeedPercentCoefficient) {
-	if (movingSpeedPercentCoefficient >= 0 && movingSpeedPercentCoefficient <= 100) {
-		_movingSpeedPercent = movingSpeedPercentCoefficient;
+void BackSeatDriver::setMovingSpeedPercent(unsigned short movingSpeedPercent) {
+	if (movingSpeedPercent >= 0 && movingSpeedPercent <= 100) {
+		_movingSpeedPercent = movingSpeedPercent;
 	}
-	if (turningSpeedPercentCoefficient >= 0 && turningSpeedPercentCoefficient <= 100) {
-		_turningSpeedPercent = turningSpeedPercentCoefficient;
+}
+void BackSeatDriver::setTurningSpeedPercent(unsigned short turningSpeedPercent) {
+	if (turningSpeedPercent >= 0 && turningSpeedPercent <= 100) {
+		_turningSpeedPercent = turningSpeedPercent;
 	}
+}
+
+void BackSeatDriver::setTurningDelayCoefficient(unsigned short turningDelayCoefficient) {
+	_turningDelayCoefficient = turningDelayCoefficient;
 }
 
 //
 // Private
 
-void BackSeatDriver::moveAtSpeed(signed short leftPercent, signed short rightPercent) {
-	leftPercent = (signed short) (1.0 * (float)(leftPercent) * _movingSpeedPercent / 100.0);
-	rightPercent = (signed short) (1.0 * (float)(rightPercent) * _movingSpeedPercent / 100.0);
+void BackSeatDriver::moveAtSpeed(signed short leftPercent, signed short rightPercent, unsigned short adjustmentPercent) {
+	leftPercent = (signed short) (1.0 * (float)(leftPercent) * adjustmentPercent / 100.0);
+	rightPercent = (signed short) (1.0 * (float)(rightPercent) * adjustmentPercent / 100.0);
 	_adapter->move(leftPercent, rightPercent);
 }
 
 void BackSeatDriver::moveAtCurrentSpeed() {
-	moveAtSpeed(_currentSpeedPercent, _currentSpeedPercent);
+	moveAtSpeed(_currentSpeedPercent, _currentSpeedPercent, _movingSpeedPercent);
 }
 
 
