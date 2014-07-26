@@ -3,7 +3,7 @@ BackSeatDriver	KEYWORD2
 attach	KEYWORD2
 detach	KEYWORD2
 goForward	KEYWORD2
-goBackward  KEYWORD2
+goBackward	KEYWORD2
 turn	KEYWORD2
 stop	KEYWORD2
 isMoving	KEYWORD2
