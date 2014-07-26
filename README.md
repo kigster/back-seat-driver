@@ -158,6 +158,17 @@ void checkRight() {
 }
 ```
 
+#### Adjusting Movement and Turning Speed
+
+Not all bots are made equal, and sometimes you'll want to adjust movement and turning speed.
+
+You can do that with the call:
+
+```c++
+// leave movement speed at 100%, but reduce turning speed to 80% of the default.
+robot.adjustMovement(100, 80);
+```
+
 #### Debugging
 
 Calling the ```debug()``` function with enable debug mode:

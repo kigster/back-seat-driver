@@ -30,8 +30,8 @@ void BackSeatDriver_TwoServoAdapter::detach() {
 }
 
 void BackSeatDriver_TwoServoAdapter::move(signed short leftSpeed, signed short rightSpeed) {
-	_left.writeMicroseconds(convertSpeedPercentToMicroseconds(leftSpeed));
-	_right.writeMicroseconds(convertSpeedPercentToMicroseconds(-rightSpeed));
+	_left.writeMicroseconds(constrain(convertSpeedPercentToMicroseconds(leftSpeed), SERVO_MIN_MS, SERVO_MAX_MS));
+	_right.writeMicroseconds(constrain(convertSpeedPercentToMicroseconds(-rightSpeed), SERVO_MIN_MS, SERVO_MAX_MS));
 }
 
 // speed can be between -100 and +100

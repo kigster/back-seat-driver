@@ -29,12 +29,15 @@ public:
 	virtual void move(
 			signed short leftSpeedPercent,
 			signed short rightSpeedPercent) = 0;
+
 private:
 };
-
 
 inline BackSeatDriver_IMotorAdapter::~BackSeatDriver_IMotorAdapter()
 {
 }
+
+
+
 
 #endif /* BACKSEATDRIVER_IMOTORADAPTER_H_ */

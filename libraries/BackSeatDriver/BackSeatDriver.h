@@ -51,7 +51,17 @@ public:
 	bool isMoving();
 	bool isManeuvering();
 	void debug(bool debugEnabled);
+
+	// each adapter provides it's own nominal speed of movement and turning,
+	// however individual robots may need adjustment
+	void adjustMovement(
+		// 0 < .. < 10,000, where 100 = no change, 50 = half speed, 200 is double, etc.
+		unsigned short movingSpeedPercentCoefficient,
+		// 0 < .. < 10,000, where 100 = no change, 50 = half speed, 200 is double, etc.
+		unsigned short turningSpeedPercentCoefficient);
+
 private:
+	unsigned short _movingSpeedPercent, _turningSpeedPercent;
 	BackSeatDriver_IMotorAdapter *_adapter;
 	// positive = forward, negative = backward
 	signed short _currentSpeedPercent;
@@ -61,6 +71,7 @@ private:
 
 	bool _debug;
 
+	void moveAtSpeed(signed short leftPercent, signed short rightPercent);
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
 	void startManeuverTimer(unsigned int durationMs,

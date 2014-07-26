@@ -12,7 +12,6 @@
 
 BackSeatDriver_DCMotorAdapter::BackSeatDriver_DCMotorAdapter(uint8_t numMotors, signed short motorMap[]) {
 	_numMotors = numMotors;
-
 	for (short i = 0; i < _numMotors; i++) {
 		_motorMap[i] = motorMap[i];
 	}
@@ -21,7 +20,6 @@ BackSeatDriver_DCMotorAdapter::BackSeatDriver_DCMotorAdapter(uint8_t numMotors, 
 BackSeatDriver_DCMotorAdapter::~BackSeatDriver_DCMotorAdapter() {
 	//
 }
-
 
 void BackSeatDriver_DCMotorAdapter::attach() {
 	_AFMS = Adafruit_MotorShield();
@@ -47,7 +45,7 @@ void BackSeatDriver_DCMotorAdapter::move(signed short speedPercentLeft, signed s
 }
 
 unsigned short BackSeatDriver_DCMotorAdapter::speedFromPercentToValue(signed short speedPercent) {
-	return 255 * abs(1.0 * speedPercent) / 100.0;
+	return constrain(255 * abs(1.0 * speedPercent / 100.0), 0, 255);
 }
 
 bool BackSeatDriver_DCMotorAdapter::isMotorReversed(uint8_t motor) {
@@ -56,7 +54,6 @@ bool BackSeatDriver_DCMotorAdapter::isMotorReversed(uint8_t motor) {
 	}
 	return (_motorMap[motor] < 0);
 }
-
 
 void BackSeatDriver_DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
 	if (speedPercent == 0) {

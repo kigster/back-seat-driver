@@ -11,6 +11,12 @@
 #ifndef BACKSEATDRIVER_TWOSERVOADAPTER_H_
 #define BACKSEATDRIVER_TWOSERVOADAPTER_H_
 
+#if defined(ARDUINO) && ARDUINO >= 100
+	#include <Arduino.h>
+#else
+	#include <WProgram.h>
+#endif
+
 #ifndef SERVO_MIN_MS
 #define SERVO_MIN_MS 1300
 #endif
