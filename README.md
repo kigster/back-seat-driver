@@ -166,7 +166,6 @@ By default, setting movement speed of 100% sets the robot at max speed. This may
 be desired.  For this purpose the following call exists:
 
 ```c++
-// leave movement speed at 100%, but reduce turning speed to 80% of the default.
 robot.setMovingSpeedPercent(80); // multiply all speed arguments from now on by 0.8
 ```
 
