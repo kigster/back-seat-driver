@@ -57,7 +57,7 @@ bool BackSeatDriver_DCMotorAdapter::isMotorReversed(uint8_t motor) {
 
 void BackSeatDriver_DCMotorAdapter::configureMotor(uint8_t index, signed short speedPercent) {
 	_motors[index]->setSpeed(speedFromPercentToValue(speedPercent));
-	if (speedPercent == 0) {
+	if (abs(speedPercent) < 10) {  // too small values don't give out enough current to spin wheels.
 		_motors[index]->run(BRAKE);
 		_motors[index]->run(RELEASE);
 	} else {
