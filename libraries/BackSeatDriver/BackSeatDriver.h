@@ -19,15 +19,21 @@
 #include "BackSeatDriver_IMotorAdapter.h"
 
 #define LOG_BUFFER_LEN 50
-#define MIN_DEBUG_LOG_FREQ 50
+#define MIN_DEBUG_LOG_FREQ  50
 
-typedef void(*maneuverCallback)(void);
+#define MANEUVER_BACK		 1
+#define MANEUVER_FORWARD 	 2
+#define MANEUVER_TURN 		 3
+
+typedef void(*maneuverCallback)(uint8_t type, signed short parameter);
 
 typedef struct maneuverStruct {
 	unsigned long durationMs;
 	unsigned long startMs;
 	maneuverCallback callback;
 	bool running;
+	uint8_t type;       	// MANEUVER_TURN, etc.
+	signed short parameter; // turn angle, etc.
 } maneuver;
 
 
@@ -45,7 +51,7 @@ public:
 	void goBackward(uint8_t speedPercent,
 			unsigned int durationMs,
 			maneuverCallback callback);
-	void turn(int angle,
+	void turn(signed short angle,
 			maneuverCallback callback);
 	void stop();
 	bool isMoving();
@@ -63,7 +69,8 @@ public:
 	// multiplying angle (in degrees) by this coefficient, eg, for 90' it's
 	// 90 x turningDelayCoefficient (ms).  Default is 7.
 	void setTurningDelayCoefficient(unsigned short turningDelayCoefficient);
-
+	void log(const
+	char *);
 private:
 	unsigned short
 		_movingSpeedPercent,
@@ -75,7 +82,7 @@ private:
 	signed short _currentSpeedPercent;
 	maneuver _maneuver;
 	char _logBuffer[LOG_BUFFER_LEN];
-	unsigned long _initMs, _lastDebugMs;
+	uint32_t _initMs, _lastDebugMs;
 
 	bool _debug;
 
@@ -85,10 +92,10 @@ private:
 			unsigned short adjustmentPercent);
 	void moveAtCurrentSpeed();
 	void checkManeuveringState();
-	void startManeuverTimer(unsigned int durationMs,
-			maneuverCallback callback);
+	void startManeuverTimer(unsigned int durationMs, uint8_t type, signed short parameter, maneuverCallback callback);
 	void stopManeuverTimer();
 	void log(void);
+	void logForward(void);
 };
 
 #endif /* BACKSEATDRIVER_H */

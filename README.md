@@ -44,13 +44,31 @@ The speed value passed into the APIs provided by the library are expected to be 
 robot.goForward(100);
 ```
 
-or
+### Callbacks
+
+Alertnatively, a version with callbacks can be used.  Callbacks are functions of type ```maneuverCallback```, which is defined as:
+
+```c++
+typedef void(*maneuverCallback)(uint8_t type, signed short parameter);
+```
+
+When a turn or a movement ends, the callback is automatically called, and two parameters are passed into it. First parameter is the
+type of the previous maneuver: MANEUVER_TURN or MANEUVER_BACK or MANEUVER_FORWARD.  Depending on the type, parameter can be the angle
+of the turn (negative for left, or positive for right), or the speed of the movement (always positive).  This way callbacks can
+perform customized actions depending on the previous data.
 
 ```c++
 // go backwards @ 50% speed, for 1 second, and then call
 // turnAround() local function defined somewhere in this context
-robot.goBackward (50, 1000, &turnAround);
+robot.goBackward(50, 1000, &turnAround);
 
+
+void turnAround(uint8_t type, short int parameter) {
+   short int angle = parameter;
+   if (type == MANEUVER_TURN && angle < 0) {
+       // perform another maneuver
+   }
+}
 ....
 
 // somewhere else in the code
@@ -116,7 +134,7 @@ static BackSeatDriver robot = BackSeatDriver(&adapter);
 
 void setup()
 {
-	robot.attach();
+    robot.attach();
 }
 
 void loop()
@@ -131,30 +149,30 @@ void loop()
     //      robot is maneuvering, perhaps with other arms or sensors.
     //
 
-	if (!bot.isManeuvering()) {
+    if (!bot.isManeuvering()) {
 
-	    // this is the default motion
-		robot.goForward(100);
+        // this is the default motion
+        robot.goForward(100);
 
-		// check distance to objects ahead
-		spaceAhead = detectSpaceAhead();
-		if (spaceAhead < 50) { // if under < 50cm start manuevering
-			// turn left 45 degrees, and when done call the checkLeft() function.
-			robot.turn(-45, &checkLeft);
-		}
-	}
+        // check distance to objects ahead
+        spaceAhead = detectSpaceAhead();
+        if (spaceAhead < 50) { // if under < 50cm start manuevering
+            // turn left 45 degrees, and when done call the checkLeft() function.
+            robot.turn(-45, &checkLeft);
+        }
+    }
 }
 
-void checkLeft() {
-	int spaceAfterTurn = spaceAhead();
-	if (spaceAfterTurn < spaceAhead)
-		robot.turn(90, &checkRight);
+void checkLeft(uint8_t type, short int parameter) {
+    int spaceAfterTurn = spaceAhead();
+    if (spaceAfterTurn < spaceAhead)
+        robot.turn(90, &checkRight);
 }
 
-void checkRight() {
-	int spaceAfterTurn = spaceAhead();
-	if (spaceAfterTurn < spaceAhead)
-		robot.turn(135, NULL);
+void checkRight(uint8_t type, short int parameter) {
+    int spaceAfterTurn = spaceAhead();
+    if (spaceAfterTurn < spaceAhead)
+        robot.turn(135, NULL);
 }
 ```
 

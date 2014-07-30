@@ -68,14 +68,15 @@ bool navigateWithSonar() {
 	return false;
 }
 
-void checkLeft() {
+void checkLeft(uint8_t type, short int parameter) {
+	// if type == MANEUVER_TURN && parameter < 0 ... (left turn)
 	spaceAfterTurn = spaceAhead();
 	detectWhiskers(&leftWhisk, &rightWhisk);
 	if (leftWhisk || spaceAfterTurn < lastSpaceAhead)
 		bot.turn(90, &checkRight);
 }
 
-void checkRight() {
+void checkRight(uint8_t type, short int parameter) {
 	spaceAfterTurn = spaceAhead();
 	detectWhiskers(&leftWhisk, &rightWhisk);
 	if (rightWhisk || spaceAfterTurn < lastSpaceAhead)
@@ -86,12 +87,20 @@ void checkRight() {
 //
 // Whisker Based Navigation
 
+void hardRight(uint8_t type, short int parameter) {
+	bot.turn(90, NULL);
+}
+
+void hardLeft(uint8_t type, short int parameters) {
+	bot.turn(-90, NULL);
+}
+
 bool navigateWithWhiskers() {
 	detectWhiskers(&leftWhisk, &rightWhisk);
 
 	if (leftWhisk || rightWhisk) {
 		bot.stop();
-		bot.goBackward(speed, 500, leftWhisk ? &hardRight : &hardLeft);
+		bot.goBackward(speed, 500, (leftWhisk ? &hardRight : &hardLeft));
 		return true;
 	}
 	return false;
@@ -102,13 +111,6 @@ void detectWhiskers(bool *left, bool *right) {
 	*right = (digitalRead(rightWhiskerPin) == LOW);
 }
 
-void hardRight() {
-	bot.turn(90, NULL);
-}
-
-void hardLeft() {
-	bot.turn(-90, NULL);
-}
 
 // Arduino API callbacks
 //____________________________________________________________________

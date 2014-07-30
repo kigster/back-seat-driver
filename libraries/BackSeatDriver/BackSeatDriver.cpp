@@ -59,7 +59,7 @@ void BackSeatDriver::goForward(uint8_t speedPercent,
 		log();
 	}
 
-	startManeuverTimer(durationMs, callback);
+	startManeuverTimer(durationMs, MANEUVER_FORWARD, speedPercent, callback);
 	goForward(speedPercent);
 }
 
@@ -68,17 +68,17 @@ void BackSeatDriver::goBackward(uint8_t speedPercent,
 		maneuverCallback callback) {
 
 	if (_debug) {
-		sprintf(_logBuffer, "goForward(%d, %d, callback=%s)",
+		sprintf(_logBuffer, "goBackward(%d, %d, callback=%s)",
 				speedPercent,
 				durationMs,
 				(callback == NULL ? "no" : "yes"));
 		log();
 	}
-	startManeuverTimer(durationMs, callback);
+	startManeuverTimer(durationMs, MANEUVER_BACK, speedPercent, callback);
 	goBackward(speedPercent);
 }
 
-void BackSeatDriver::turn(int angle, maneuverCallback callback) {
+void BackSeatDriver::turn(signed short angle, maneuverCallback callback) {
 	if (_debug) {
 		sprintf(_logBuffer, "turn(%d, callback=%s)",
 				angle,
@@ -86,11 +86,13 @@ void BackSeatDriver::turn(int angle, maneuverCallback callback) {
 		log();
 	}
 
-	stop();
+	if (abs(_currentSpeedPercent) > 0)
+		stop();
+
 	signed short speed = 100 * (angle == 0 ? 1 : abs(angle) / angle);
 	speed = (signed short) (1.0f * (float)speed * (float)_turningSpeedPercent / 100.0f);
 	moveAtSpeed(speed, -speed, _turningSpeedPercent);
-	startManeuverTimer(abs(angle) * _turningDelayCoefficient, callback);
+	startManeuverTimer(abs(angle) * _turningDelayCoefficient, MANEUVER_TURN, angle, callback);
 }
 
 void BackSeatDriver::stop() {
@@ -150,41 +152,70 @@ void BackSeatDriver::stopManeuverTimer() {
 	_maneuver.running = false;
 	_maneuver.durationMs = 0;
 	_maneuver.startMs = 0;
+	_maneuver.type = 0;
+	_maneuver.parameter = 0;
+	_maneuver.callback = NULL;
 }
 
 void BackSeatDriver::checkManeuveringState() {
 	if (_maneuver.running && millis() - _maneuver.startMs > _maneuver.durationMs) {
+		maneuver currentManeuver = _maneuver;  // copy maneuver so that _maneuver can be reset
 		stop();
-
-		maneuverCallback oldCallback = _maneuver.callback;
-		_maneuver.callback = NULL;
 
 		// call the callback (if defined) using previously saved poiner
 		// start another maneuver, and yet reset _maneuverCallback
 		// if no new maneuver was started.
-		if (oldCallback != NULL) {
-			if (_debug) { sprintf(_logBuffer, "executing callback"); log(); }
-			oldCallback();
+		if (currentManeuver.callback != NULL) {
+			const char *callbackType;
+			switch (currentManeuver.type) {
+			case MANEUVER_BACK:
+				callbackType = "backward";
+				break;
+			case MANEUVER_FORWARD:
+				callbackType = "forward";
+				break;
+			case MANEUVER_TURN:
+				callbackType = "turn";
+				break;
+			default:
+				callbackType = "unknown";
+			}
+
+			if (_debug) { sprintf(_logBuffer, "running callback after %s(%d)", callbackType, currentManeuver.parameter); log(); }
+			currentManeuver.callback(currentManeuver.type, currentManeuver.parameter);
 		}
 	}
 }
 
-void BackSeatDriver::startManeuverTimer(unsigned int durationMs,
-		maneuverCallback callback) {
+void BackSeatDriver::startManeuverTimer(unsigned int durationMs, uint8_t type, signed short parameter, maneuverCallback callback) {
 	_maneuver.callback = callback;
 	_maneuver.startMs = millis();
 	_maneuver.durationMs = durationMs;
 	_maneuver.running = true;
+	_maneuver.type = type;
+	_maneuver.parameter = parameter;
+}
+
+void BackSeatDriver::logForward() {
+	uint32_t ms = millis();
+	if (ms - _lastDebugMs > MIN_DEBUG_LOG_FREQ) {
+		_lastDebugMs = ms;
+		log();
+	}
+}
+
+void BackSeatDriver::log(const char *message) {
+	if (strlen(message) < LOG_BUFFER_LEN) {
+		sprintf(_logBuffer, "%s", message);
+		log();
+	}
 }
 
 void BackSeatDriver::log() {
 	char millisSince[15];
-	unsigned long ms = millis();
-	if (ms - _lastDebugMs > MIN_DEBUG_LOG_FREQ) {
-		_lastDebugMs = ms;
-
-		sprintf(millisSince, "%10d\t", (int)(_lastDebugMs - _initMs) );
-		Serial.print(millisSince);
-		Serial.println(_logBuffer);
-	}
+	uint32_t ms = millis();
+	_lastDebugMs = ms;
+	sprintf(millisSince, "%10d\t", (int)(_lastDebugMs - _initMs) );
+	Serial.print(millisSince);
+	Serial.println(_logBuffer);
 }
