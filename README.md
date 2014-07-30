@@ -249,7 +249,13 @@ Serial port. Here is an example below (first column is milliseconds since progra
 Here is a model I assembled, with an added Ultrasound distance sensor.
 The sensor seems to be pretty focused on a narrow path.
 
-![Parallax Arduino Robot](bot.jpg)
+#### Servo Bot (Parallax Arduino Kit)
+
+![Parallax Arduino Robot](bot_servo.jpg)
+
+#### DC Motor Bot (Custom built, Adafruit Motor Shield)
+
+![Parallax Arduino Robot](bot_dc.jpg)
 
 ### Disclaimer and Invitation to Collaborate
 
