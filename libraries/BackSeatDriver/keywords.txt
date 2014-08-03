@@ -9,3 +9,7 @@ stop	KEYWORD2
 isMoving	KEYWORD2
 isManeuvering	KEYWORD2
 debug	KEYWORD2
+setMovingSpeedPercent	KEYWORD2
+setTurningSpeedPercent	KEYWORD2
+setTurningDelayCoefficient	KEYWORD2
+log	KEYWORD2
