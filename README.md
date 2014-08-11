@@ -255,7 +255,14 @@ The sensor seems to be pretty focused on a narrow path.
 
 #### DC Motor Bot (Custom built, Adafruit Motor Shield)
 
-![Parallax Arduino Robot](bot_dc.jpg)
+![DC Motor Robot with Adafruit Motor Shield](bot_dc.jpg)
+
+#### Another DC Motor Bot (dx.com frame, Adafruit Motor Shield)
+
+![DC Motor Robot with Adafruit Motor Shield](bot_dc_chaseroni.jpg)
+
+Note the 5A fuse attached to the body. After one of my wires smoked, I decided to use fuses
+on all powered vehicles.  I'd rather burn a fuse than my house :)
 
 ### Disclaimer and Invitation to Collaborate
 
