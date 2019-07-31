@@ -31,7 +31,7 @@ This library provides a convenient non-blocking command API to programmatically 
 
 ![DC Motor Robot with Adafruit Motor Shield](img/bot_dc.jpg)
 
-The [Racer](examples/Racer.ino) example is a good example of a fast moving DC motor car pictured.
+The [ObstacleAvoidance (DC) Example](examples/ObstacleAvoidanceDC.ino) is a good referewnce on how to make a fast moving DC motor car pictured.
 
 The library **defines an interface, which can be used to give commands to the robot** without blocking, and in a way that's not coupled to any particular style engine. In order to use this library you must pick one of the two provided adapters, which actually implement the movements, but in terms of their specific type of motor they describe.
 
