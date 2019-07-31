@@ -1,2 +1,0 @@
-BackSeatDriver_DCMotorAdapter	KEYWORD1
-BackSeatDriver_DCMotorAdapter	KEYWORD2

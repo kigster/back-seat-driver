@@ -1,14 +1,17 @@
 /*
+ * File: ObstacleAvoidanceServo.ino
+ *
  * This example uses HC-SR04 distance sensor to detect obstacles and change course.
-
+ *
  * IMPORTANT: to make this work you need to Import the following libraries:
  *
- *    Wire, Servo, NewPing, BackSeatDriver, BackSeatDriver_TwoServoAdapter
+ *    Wire, Servo, NewPing, BackSeatDriver
  *
- * Created on: Jul 16, 2014
+ * Created on: Jul 16, 2014, updated July 2019.
  * Author: Konstantin Gredeskoul
  *
  * © 2014 All rights reserved.  Please see LICENSE.
+ * © 2019 All rights reserved.  Please see LICENSE.
  *
  */
 
@@ -25,6 +28,7 @@
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
+// load the servo motor implementation first
 #include <BackSeatDriver_TwoServoAdapter.h>
 #include <BackSeatDriver.h>
 
@@ -41,7 +45,6 @@ static const uint8_t sonarCheckPeriodMs = 50; // don't check more often than tha
 static unsigned short lastSonarAtMs = 0;
 
 //_______________________________________________________________________
-//
 // Sonar Navigation
 
 unsigned int spaceAhead() {
@@ -138,4 +141,3 @@ void loop() {
 		navigateWithWhiskers() || navigateWithSonar() ; // || .....
 	}
 }
-
