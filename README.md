@@ -1,33 +1,28 @@
 # BackSeatDriver
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-- [BackSeatDriver](#backseatdriver)
-	- [Autonomous Vehicle Library for Arduino](#autonomous-vehicle-library-for-arduino)
-		- [Main Features](#main-features)
-			- [Non-Blocking Control](#non-blocking-control)
-		- [Hardware Requirements](#hardware-requirements)
-	- [Usage](#usage)
-		- [Moving Forward, Backward](#moving-forward-backward)
-		- [Callbacks](#callbacks)
-	- [Examples](#examples)
-		- [Initializing a 2-Servo Robot](#initializing-a-2-servo-robot)
-- [include <BackSeatDriver_TwoServoAdapter.h>](#include-backseatdrivertwoservoadapterh)
-- [include <BackSeatDriver.h>](#include-backseatdriverh)
-			- [Initializing a 4-DC Motor Robot](#initializing-a-4-dc-motor-robot)
-- [include <BackSeatDriver_DCMotorAdapter.h>](#include-backseatdriverdcmotoradapterh)
-- [include <BackSeatDriver.h>](#include-backseatdriverh)
-			- [Avoiding Obstacles using Sonar Sensor](#avoiding-obstacles-using-sonar-sensor)
-			- [Adjusting Movement Speed](#adjusting-movement-speed)
-			- [Adjusting Turning Speed and Delay Coefficient](#adjusting-turning-speed-and-delay-coefficient)
-			- [Debugging](#debugging)
-		- [Working Model](#working-model)
-			- [Servo Bot (Parallax Arduino Kit)](#servo-bot-parallax-arduino-kit)
-			- [DC Motor Bot (Custom built, Adafruit Motor Shield)](#dc-motor-bot-custom-built-adafruit-motor-shield)
-			- [Another DC Motor Bot (dx.com frame, Adafruit Motor Shield)](#another-dc-motor-bot-dxcom-frame-adafruit-motor-shield)
-		- [Disclaimer and Invitation to Collaborate](#disclaimer-and-invitation-to-collaborate)
-	- [Contributing](#contributing)
-	- [Author](#author)
-	- [License](#license)
+- [Autonomous Vehicle Library for Arduino](#autonomous-vehicle-library-for-arduino)
+	- [Main Features](#main-features)
+		- [Non-Blocking Control](#non-blocking-control)
+	- [Hardware Requirements](#hardware-requirements)
+- [Usage](#usage)
+	- [Moving Forward, Backward](#moving-forward-backward)
+	- [Callbacks](#callbacks)
+- [Examples](#examples)
+	- [Initializing a 2-Servo Robot](#initializing-a-2-servo-robot)
+		- [Initializing a 4-DC Motor Robot](#initializing-a-4-dc-motor-robot)
+		- [Avoiding Obstacles using Sonar Sensor](#avoiding-obstacles-using-sonar-sensor)
+		- [Adjusting Movement Speed](#adjusting-movement-speed)
+		- [Adjusting Turning Speed and Delay Coefficient](#adjusting-turning-speed-and-delay-coefficient)
+		- [Debugging](#debugging)
+- [Images of Actual Working Bots](#images-of-actual-working-bots)
+	- [Servo Bot (Parallax Arduino Kit)](#servo-bot-parallax-arduino-kit)
+	- [DC Motor Bot (Custom built, Adafruit Motor Shield)](#dc-motor-bot-custom-built-adafruit-motor-shield)
+	- [Another DC Motor Bot (dx.com frame, Adafruit Motor Shield)](#another-dc-motor-bot-dxcom-frame-adafruit-motor-shield)
+- [Disclaimer and Invitation to Collaborate](#disclaimer-and-invitation-to-collaborate)
+- [Contributing](#contributing)
+- [Author](#author)
+- [License](#license)
 
 <!-- /TOC -->
 ## Autonomous Vehicle Library for Arduino
@@ -275,27 +270,27 @@ Serial port. Here is an example below (first column is milliseconds since progra
      17052	stop()
 ```
 
-### Working Model
+## Images of Actual Working Bots
 
 Here is a model I assembled, with an added Ultrasound distance sensor.
 The sensor seems to be pretty focused on a narrow path.
 
-#### Servo Bot (Parallax Arduino Kit)
+### Servo Bot (Parallax Arduino Kit)
 
 ![Parallax Arduino Robot](img/bot_servo.jpg)
 
-#### DC Motor Bot (Custom built, Adafruit Motor Shield)
+### DC Motor Bot (Custom built, Adafruit Motor Shield)
 
 ![DC Motor Robot with Adafruit Motor Shield](img/bot_dc.jpg)
 
-#### Another DC Motor Bot (dx.com frame, Adafruit Motor Shield)
+### Another DC Motor Bot (dx.com frame, Adafruit Motor Shield)
 
 ![DC Motor Robot with Adafruit Motor Shield](img/bot_dc_chaseroni.jpg)
 
 Note the 5A fuse attached to the body. After one of my wires smoked, I decided to use fuses
 on all powered vehicles.  I'd rather burn a fuse than my house :)
 
-### Disclaimer and Invitation to Collaborate
+## Disclaimer and Invitation to Collaborate
 
 This project is also an eternal learning quest for the author, who only started tinkering with Arduino at the end of June 2014. Therefore please keep in mind that this library is not written by an Arduino expert, although the author does have an extensive software development background in other languages.
 
