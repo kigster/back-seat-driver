@@ -278,6 +278,7 @@ The sensor seems to be pretty focused on a narrow path.
 ### Servo Bot (Parallax Arduino Kit)
 
 ![Parallax Arduino Robot](img/bot_servo.jpg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkigster%2Fback-seat-driver.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkigster%2Fback-seat-driver?ref=badge_shield)
 
 ### DC Motor Bot (Custom built, Adafruit Motor Shield)
 
@@ -311,3 +312,6 @@ Konstantin Gredeskoul, @kig, http://github.com/kigster
 ## License
 
 MIT.  See LICENSE file for more details.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkigster%2Fback-seat-driver.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkigster%2Fback-seat-driver?ref=badge_large)
